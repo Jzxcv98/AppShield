@@ -1,0 +1,436 @@
+<Window x:Class="AppShield.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:AppShield.UI"
+        Title="AppShield" Width="1130" Height="790" MinWidth="780" MinHeight="530"
+        WindowStartupLocation="CenterScreen" Background="#F0F3F7"
+        FontFamily="Segoe UI, Microsoft YaHei UI" FontSize="14" Foreground="#20344A"
+        UseLayoutRounding="True" SnapsToDevicePixels="True"
+        AutomationProperties.AutomationId="AppShieldWindow">
+    <Window.Resources>
+        <SolidColorBrush x:Key="Ink" Color="#20344A"/>
+        <SolidColorBrush x:Key="Muted" Color="#53667B"/>
+        <SolidColorBrush x:Key="Line" Color="#D7E0E9"/>
+        <SolidColorBrush x:Key="Blue" Color="#285C91"/>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+            <Setter Property="BorderBrush" Value="#B7C5D3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="14,7"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Surface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Surface" Property="BorderBrush" Value="#6593BC"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Surface" Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Surface" Property="BorderBrush" Value="#267AEA"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Surface" Property="Opacity" Value="0.52"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Primary" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource Blue}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Blue}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="RailButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#264055"/>
+            <Setter Property="BorderBrush" Value="#547084"/>
+            <Setter Property="Foreground" Value="#F2F7F9"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="Caption" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="19"/>
+        </Style>
+        <Style x:Key="Section" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,9"/>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+            <Setter Property="Margin" Value="0,3,20,4"/>
+        </Style>
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Padding" Value="13,9"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabEdge" Background="Transparent" BorderBrush="Transparent" BorderThickness="0,0,0,3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="TabLabel" HorizontalAlignment="Center" ContentSource="Header"
+                                              TextElement.Foreground="{StaticResource Muted}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabLabel" Property="TextElement.Foreground" Value="{StaticResource Blue}"/>
+                                <Setter TargetName="TabLabel" Property="TextElement.FontWeight" Value="SemiBold"/>
+                                <Setter TargetName="TabEdge" Property="BorderBrush" Value="{StaticResource Blue}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="TabEdge" Property="Background" Value="#DDEDF9"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#F0F3F7">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+        <Grid Background="#203747" TextElement.Foreground="#F4F8FA">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Margin="20,29,14,28">
+                <Viewbox Width="32" Height="36">
+                    <Grid Width="28" Height="32">
+                        <Path Data="M 14,1 L 25.5,5.5 L 25.5,15 C 25.5,22 20,27.5 14,30.5 C 8,27.5 2.5,22 2.5,15 L 2.5,5.5 Z"
+                              Fill="#E7F2FA"/>
+                        <Path Data="M 14,6 L 21.5,8.8 L 21.5,15.2 C 21.5,19.8 18.5,23.8 14,26.3 Z" Fill="#5895AD"/>
+                    </Grid>
+                </Viewbox>
+                <TextBlock Text="AppShield" FontFamily="Barlow Semi Condensed, Segoe UI" FontSize="25" FontWeight="SemiBold"
+                           VerticalAlignment="Center" Margin="11,0,0,2"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Margin="15,0,15,15">
+                <Button x:Name="AddExeButton" AutomationProperties.AutomationId="AddExecutable" Click="OnAddExe"
+                        HorizontalContentAlignment="Left" Padding="13,7" FontWeight="SemiBold" Content="＋  添加 EXE…"/>
+                <Button x:Name="AddWeChatButton" AutomationProperties.AutomationId="ImportWeChat" Click="OnImportWeChat"
+                        Style="{StaticResource RailButton}" Margin="0,7,0,0" Content="导入已安装的微信"/>
+                <Button x:Name="AddTelegramButton" AutomationProperties.AutomationId="ImportTelegram" Click="OnImportTelegram"
+                        Style="{StaticResource RailButton}" Margin="0,7,0,0" Content="导入已安装的 Telegram"/>
+                <TextBlock Margin="5,24,0,0" Text="应用列表" Foreground="#B2C7D4" FontSize="12"/>
+            </StackPanel>
+            <ListBox x:Name="AppList" Grid.Row="2" Margin="9,0,9,8" Background="Transparent" BorderThickness="0"
+                     AutomationProperties.AutomationId="ApplicationList" AutomationProperties.Name="应用列表"
+                     SelectionChanged="OnAppSelected" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.Template>
+                    <ControlTemplate TargetType="ListBox">
+                        <ScrollViewer Focusable="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ListBox.Template>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Foreground" Value="#EAF2F7"/><Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Margin" Value="0,0,0,3"/><Setter Property="Padding" Value="11,9"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="AutomationProperties.Name" Value="{Binding DisplayName}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="Item" CornerRadius="4" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Item" Property="Background" Value="#304D60"/></Trigger>
+                                        <Trigger Property="IsSelected" Value="True"><Setter TargetName="Item" Property="Background" Value="#3D5A6D"/></Trigger>
+                                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Item" Property="BorderBrush" Value="#99BFD2"/><Setter TargetName="Item" Property="BorderThickness" Value="1"/></Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Text="{Binding FileName}" FontSize="11" Foreground="#C6D8E2" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Border Grid.Row="3" BorderBrush="#456070" BorderThickness="0,1,0,0" Padding="16,13,16,15">
+                <StackPanel>
+                    <TextBlock Text="AppShield 原生引擎" FontSize="14" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="EngineState" Margin="0,4,0,9" FontSize="12" Foreground="#CCDAE3"
+                               TextWrapping="Wrap" AutomationProperties.AutomationId="EngineState" Text="正在读取引擎状态…"/>
+                    <Button x:Name="RefreshButton" Style="{StaticResource RailButton}" Click="OnRefresh" Content="刷新状态"
+                            AutomationProperties.AutomationId="RefreshStatus"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Column="1" Margin="24,19,24,13">
+            <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <Border x:Name="EmptyPanel" Background="White" CornerRadius="6" BorderBrush="{StaticResource Line}" BorderThickness="1">
+                <StackPanel MaxWidth="430" Margin="30" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock FontSize="23" FontWeight="SemiBold" Text="添加要管理的应用"/>
+                    <TextBlock Style="{StaticResource Caption}" FontSize="14" Margin="0,9,0,0"
+                               Text="选择左侧的“添加 EXE”，或导入本机已安装的微信、Telegram，设置文件、剪贴板和网络权限。"/>
+                </StackPanel>
+            </Border>
+            <Grid x:Name="DetailPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="AppTitle" FontFamily="Barlow, Segoe UI, Microsoft YaHei UI" FontSize="29" FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis" AutomationProperties.AutomationId="AppTitle"/>
+                <StackPanel Grid.Row="1" Margin="1,3,0,14">
+                    <TextBlock x:Name="AppIdentity" Style="{StaticResource Caption}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
+                    <TextBlock x:Name="AppPath" Style="{StaticResource Caption}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                               ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                </StackPanel>
+                <Border Grid.Row="2" Background="White" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="5" Padding="12,5,12,10">
+                    <TabControl x:Name="Sections" SelectionChanged="OnSectionSelected">
+                        <TabItem x:Name="PermissionsTab" Header="权限设置" AutomationProperties.AutomationId="PermissionsTab">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel Margin="6,14,10,4">
+                                    <TextBlock x:Name="WeChatPolicyScope" Visibility="Collapsed" Style="{StaticResource Caption}" Margin="0,0,0,12"
+                                               Text="此页设置用于 AppContainer。点击“隔离启动…”可选择专用账户或一次性 Windows 沙盒，两种方式各有独立的权限范围。"/>
+                                    <DockPanel LastChildFill="True">
+                                        <Button x:Name="AddFolderButton" DockPanel.Dock="Right" Click="OnAddFolder" Content="添加目录…"
+                                                AutomationProperties.AutomationId="AddFolder" Padding="10,4" MinHeight="28"/>
+                                        <TextBlock Style="{StaticResource Section}" VerticalAlignment="Center" Margin="0" Text="文件访问"/>
+                                    </DockPanel>
+                                    <TextBlock Style="{StaticResource Caption}" Margin="0,4,0,9" Text="应用权限会为此应用身份设置所选目录的 Windows ACL。系统原本对应用包开放的资源仍可能可读。"/>
+                                    <ListBox x:Name="FolderList" Margin="0,0,0,2" MaxHeight="154" MinHeight="40" BorderBrush="{StaticResource Line}" SelectionChanged="OnFolderSelected"
+                                             Background="#F7F9FC" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             AutomationProperties.AutomationId="FolderRules" AutomationProperties.Name="已授权目录">
+                                        <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="Padding" Value="5,3"/>
+                                        </Style></ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate><DataTemplate>
+                                            <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Path}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path}"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding ModeLabel}" Margin="12,0,3,0" Foreground="{StaticResource Blue}"/>
+                                            </Grid>
+                                        </DataTemplate></ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <DockPanel>
+                                        <TextBlock x:Name="FolderSummary" DockPanel.Dock="Left" Style="{StaticResource Caption}" VerticalAlignment="Center"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button x:Name="FolderModeButton" Padding="9,4" MinHeight="25" FontSize="12" Content="切换读写"
+                                                    Click="OnChangeFolder" AutomationProperties.AutomationId="ToggleFolderAccess"/>
+                                            <Button x:Name="RemoveFolderButton" Padding="9,4" MinHeight="25" FontSize="12" Margin="5,0,0,0"
+                                                    Content="移除" Click="OnRemoveFolder" AutomationProperties.AutomationId="RemoveFolder"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,12"/>
+                                    <TextBlock Text="剪贴板" Style="{StaticResource Section}"/>
+                                    <WrapPanel>
+                                        <CheckBox x:Name="TextInCheck" Content="允许手动传入文本" Checked="OnPolicyEdited" Unchecked="OnPolicyEdited" AutomationProperties.AutomationId="AllowTextIn"/>
+                                        <CheckBox x:Name="TextOutCheck" Content="允许手动导出文本" Checked="OnPolicyEdited" Unchecked="OnPolicyEdited" AutomationProperties.AutomationId="AllowTextOut"/>
+                                    </WrapPanel>
+                                    <TextBlock x:Name="ClipboardPolicy" Style="{StaticResource Caption}" AutomationProperties.AutomationId="ClipboardPolicy"/>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,12"/>
+                                    <TextBlock Text="网络" Style="{StaticResource Section}"/>
+                                    <WrapPanel>
+                                        <CheckBox x:Name="InternetCheck" Content="允许公网" Checked="OnPolicyEdited" Unchecked="OnPolicyEdited" AutomationProperties.AutomationId="AllowInternet"/>
+                                        <CheckBox x:Name="LoopbackCheck" Content="允许本机回环" Checked="OnPolicyEdited" Unchecked="OnPolicyEdited" AutomationProperties.AutomationId="AllowLoopback"/>
+                                        <CheckBox x:Name="LanCheck" Content="允许局域网" Checked="OnPolicyEdited" Unchecked="OnPolicyEdited" AutomationProperties.AutomationId="AllowLan"/>
+                                    </WrapPanel>
+                                    <TextBlock x:Name="NetworkHint" Style="{StaticResource Caption}" Margin="0,3,0,0"/>
+                                    <Border x:Name="TelegramPolicy" Visibility="Collapsed" Background="#EDF4F8" BorderThickness="3,0,0,0"
+                                            BorderBrush="#6A94AD" Margin="0,17,0,0" Padding="12,8">
+                                        <StackPanel>
+                                            <TextBlock Text="Telegram 启动设置" FontWeight="SemiBold" Foreground="#365A70"/>
+                                            <TextBlock Style="{StaticResource Caption}" Margin="0,3,0,0"
+                                                       Text="使用独立数据目录，跳过链接自动注册。商店版 7.3.3 的本地通信监听在原生隔离中失败。"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+                        <TabItem x:Name="ChatTab" Header="对话助手" Visibility="Collapsed" AutomationProperties.AutomationId="WeChatConversationTab">
+                            <ui:ConversationPanel x:Name="ChatPanel"/>
+                        </TabItem>
+                        <TabItem x:Name="LiveTab" Header="运行中隐私" Visibility="Collapsed" AutomationProperties.AutomationId="WeChatLiveTab">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel Margin="7,14,10,4">
+                                    <DockPanel>
+                                        <Button x:Name="LiveRefreshButton" DockPanel.Dock="Right" Content="刷新" Click="OnLiveRefresh"
+                                                Padding="12,4" MinHeight="28" AutomationProperties.AutomationId="WeChatLiveRefresh"/>
+                                        <TextBlock Text="微信主程序" Style="{StaticResource Section}" VerticalAlignment="Center"/>
+                                    </DockPanel>
+                                    <Grid x:Name="LiveCounts" Margin="0,8,0,0">
+                                        <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="80"/><ColumnDefinition Width="105"/></Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                                        <Grid.Resources><Style TargetType="TextBlock"><Setter Property="Margin" Value="0,2,8,2"/></Style></Grid.Resources>
+                                        <TextBlock Text="Windows 账户或会话"/><TextBlock Grid.Column="1" Text="进程数"/><TextBlock Grid.Column="2" Text="已建立 TCP"/>
+                                        <TextBlock Grid.Row="1" Text="当前用户 · 本会话"/><TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentUserProcesses, FallbackValue=未知}"/><TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CurrentUserEstablishedTcp, TargetNullValue=未知, FallbackValue=未知}"/>
+                                        <TextBlock Grid.Row="2" Text="其他用户 · 本会话"/><TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding OtherUserProcesses, FallbackValue=未知}"/><TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding OtherUserEstablishedTcp, TargetNullValue=未知, FallbackValue=未知}"/>
+                                        <TextBlock Grid.Row="3" Text="其他 Windows 会话"/><TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding OtherSessionProcesses, FallbackValue=未知}"/><TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding OtherSessionEstablishedTcp, TargetNullValue=未知, FallbackValue=未知}"/>
+                                    </Grid>
+                                    <TextBlock x:Name="LiveSampleNote" Margin="0,5,0,0" Style="{StaticResource Caption}" Text="尚未采样"/>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,14,0,10"/>
+                                    <TextBlock Text="网络出站规则" Style="{StaticResource Section}"/>
+                                    <TextBlock Style="{StaticResource Caption}" Text="作用于所选账户下、当前安装路径的微信主程序。已有连接可能继续工作；本机回环和其他程序映像另有各自的访问权限。"/>
+                                    <ComboBox x:Name="LiveNetworkTarget" DisplayMemberPath="Label" SelectedValuePath="Sid" HorizontalAlignment="Left"
+                                              MinWidth="190" Margin="0,7,0,2" SelectionChanged="OnLiveTargetSelected"
+                                              AutomationProperties.Name="应用网络规则的 Windows 账户" AutomationProperties.AutomationId="WeChatNetworkTarget"/>
+                                    <TextBlock x:Name="LiveNetworkState" Style="{StaticResource Caption}" Text="规则状态待核实"/>
+                                    <WrapPanel Margin="0,6,0,0">
+                                        <Button x:Name="LiveBlockButton" Content="阻止新出站连接" Click="OnLiveBlock" Margin="0,0,7,4" AutomationProperties.AutomationId="WeChatBlockOutbound"/>
+                                        <Button x:Name="LiveRevokeButton" Content="撤销阻止" Click="OnLiveRevoke" Margin="0,0,0,4" AutomationProperties.AutomationId="WeChatRevokeOutbound"/>
+                                    </WrapPanel>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,10,0,10"/>
+                                    <TextBlock Text="剪贴板" Style="{StaticResource Section}"/>
+                                    <TextBlock Style="{StaticResource Caption}" Text="需要先退出已运行的微信。下次启动时限制进程树读取和写入宿主剪贴板，应用仍可能清空已有内容。"/>
+                                    <Button x:Name="LiveClipButton" HorizontalAlignment="Left" Margin="0,7,0,3" Click="OnLiveClipLaunch"
+                                            Content="以当前账户限制剪贴板启动" AutomationProperties.AutomationId="WeChatClipboardLaunch"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+                        <TabItem x:Name="AccountTab" Header="宿主文件保护" Visibility="Collapsed"
+                                 AutomationProperties.AutomationId="WeChatAccountTab">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel Margin="7,14,10,4">
+                                    <TextBlock Text="专用 Windows 账户" Style="{StaticResource Section}"/>
+                                    <TextBlock Style="{StaticResource Caption}" Text="使用已有的本机标准账户在当前桌面启动微信。微信使用该账户的用户资料。默认共享桌面剪贴板。"/>
+                                    <WrapPanel Margin="0,8,0,3">
+                                        <StackPanel Width="170" Margin="0,0,12,7">
+                                            <Label Target="{Binding ElementName=AccountNameBox}" Padding="0,0,0,3" Content="本机账户名"/>
+                                            <TextBox x:Name="AccountNameBox" Padding="6,4" TextChanged="OnAccountFieldChanged"
+                                                     AutomationProperties.Name="本机专用账户名" AutomationProperties.AutomationId="WeChatLocalAccount"/>
+                                        </StackPanel>
+                                        <StackPanel Width="175" Margin="0,0,0,7">
+                                            <Label Target="{Binding ElementName=AccountPasswordBox}" Padding="0,0,0,3" Content="Windows 账户密码"/>
+                                            <PasswordBox x:Name="AccountPasswordBox" Padding="6,4" PasswordChanged="OnAccountFieldChanged"
+                                                         AutomationProperties.Name="专用 Windows 账户密码" AutomationProperties.AutomationId="WeChatAccountPassword"/>
+                                        </StackPanel>
+                                    </WrapPanel>
+                                    <CheckBox x:Name="AccountClipLimit" Margin="0,4,0,7" Content="本次启动限制剪贴板读写（仍可能清空）"
+                                              AutomationProperties.AutomationId="WeChatAccountClipLimit"/>
+                                    <Button x:Name="AccountLaunchButton" HorizontalAlignment="Left" Style="{StaticResource Primary}"
+                                            Content="以专用账户启动微信" Click="OnAccountLaunch" AutomationProperties.AutomationId="WeChatAccountLaunch"/>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,16,0,12"/>
+                                    <TextBlock Text="受保护的目录" Style="{StaticResource Section}"/>
+                                    <TextBlock Style="{StaticResource Caption}" Text="选择后立即拒绝该账户下所有程序新打开目录和继承规则的文件。程序已打开的文件仍可继续使用。"/>
+                                    <WrapPanel Margin="0,8,0,7">
+                                        <Button x:Name="AccountProtectButton" Content="选择并保护目录…" Margin="0,0,7,4"
+                                                Click="OnAccountProtect" AutomationProperties.AutomationId="WeChatAccountProtect"/>
+                                        <Button x:Name="AccountRevokeButton" Content="撤销选中保护" Margin="0,0,0,4"
+                                                Click="OnAccountUnprotect" AutomationProperties.AutomationId="WeChatAccountUnprotect"/>
+                                    </WrapPanel>
+                                    <TextBlock x:Name="AccountFolderSummary" Style="{StaticResource Caption}"/>
+                                    <ListBox x:Name="AccountFolderList" Margin="0,4,0,3" MaxHeight="165" MinHeight="37"
+                                             BorderBrush="{StaticResource Line}" Background="#F7F9FC"
+                                             SelectionChanged="OnFolderSelected" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             AutomationProperties.Name="专用账户目录保护" AutomationProperties.AutomationId="WeChatAccountFolders">
+                                        <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="Padding" Value="6,4"/>
+                                        </Style></ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate><DataTemplate><Grid>
+                                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                                            <TextBlock Grid.ColumnSpan="2" Text="{Binding Path}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Path}"/>
+                                            <TextBlock Grid.Row="1" Text="{Binding Account}" Style="{StaticResource Caption}" ToolTip="{Binding Sid}"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Status}" Margin="8,0,2,0" Style="{StaticResource Caption}"/>
+                                        </Grid></DataTemplate></ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+                        <TabItem Header="收发中转" AutomationProperties.AutomationId="TransfersTab">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel Margin="7,16,10,5">
+                                    <TextBlock Text="宿主 → 应用" Style="{StaticResource Section}"/>
+                                    <TextBlock x:Name="OutboundHint" Style="{StaticResource Caption}"/>
+                                    <TextBox x:Name="OutgoingPath" IsReadOnly="True" Margin="0,6,0,0" Padding="6,4" BorderBrush="{StaticResource Line}"
+                                             AutomationProperties.Name="宿主传入目录" AutomationProperties.AutomationId="OutgoingPath" TextWrapping="Wrap"/>
+                                    <Button x:Name="StageFileButton" Content="选择要传入的文件…" Click="OnStageFile" HorizontalAlignment="Left"
+                                            Margin="0,10,0,0" AutomationProperties.AutomationId="ImportFile"/>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,18,0,14"/>
+                                    <TextBlock Text="应用 → 宿主" Style="{StaticResource Section}"/>
+                                    <TextBlock x:Name="InboundHint" Style="{StaticResource Caption}"/>
+                                    <TextBox x:Name="IncomingPath" IsReadOnly="True" Margin="0,6,0,0" Padding="6,4" BorderBrush="{StaticResource Line}"
+                                             AutomationProperties.Name="应用交出目录" AutomationProperties.AutomationId="IncomingPath" TextWrapping="Wrap"/>
+                                    <Button x:Name="ExportFileButton" Content="选择并导出文件…" Click="OnExportFile" HorizontalAlignment="Left"
+                                            Margin="0,10,0,0" AutomationProperties.AutomationId="ExportFile"/>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,18,0,14"/>
+                                    <TextBlock Text="单次文本传递" Style="{StaticResource Section}"/>
+                                    <TextBlock Style="{StaticResource Caption}" Text="选择已核对归属的窗口，将当前剪贴板的纯文本粘贴一次。"/>
+                                    <ComboBox x:Name="PasteTargets" DisplayMemberPath="Label" Margin="0,7,0,0" MinWidth="175" Height="29"
+                                              HorizontalAlignment="Left" SelectionChanged="OnTargetSelected"
+                                              AutomationProperties.AutomationId="PasteTarget" AutomationProperties.Name="目标窗口"/>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <Button x:Name="PasteButton" Content="粘贴到选中窗口" Click="OnPaste" Margin="0,0,7,5" AutomationProperties.AutomationId="PasteText"/>
+                                        <Button x:Name="StageTextButton" Content="以文件传入剪贴板文本" Click="OnStageText" Margin="0,0,7,5" AutomationProperties.AutomationId="StageText"/>
+                                        <Button x:Name="CopyTextButton" Content="从交出目录复制文本…" Click="OnCopyText" Margin="0,0,0,5" AutomationProperties.AutomationId="CopyOutgoingText"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+                        <TabItem Header="运行详情" AutomationProperties.AutomationId="DiagnosticsTab">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel Margin="7,16,10,5">
+                                    <TextBlock Text="进程归属" Style="{StaticResource Section}"/>
+                                    <TextBlock x:Name="RuntimeDetails" TextWrapping="Wrap" LineHeight="22"/>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,16"/>
+                                    <TextBlock Text="隔离引擎" Style="{StaticResource Section}"/>
+                                    <TextBlock x:Name="EngineDetails" TextWrapping="Wrap" LineHeight="22"/>
+                                    <Border Height="1" Background="{StaticResource Line}" Margin="0,16"/>
+                                    <TextBlock Text="应用配置" Style="{StaticResource Section}"/>
+                                    <TextBlock x:Name="ProfileDetails" TextWrapping="Wrap" LineHeight="22"/>
+                                    <Button x:Name="DiscardButton" HorizontalAlignment="Left" Margin="0,10,0,0" Content="重新读取已保存配置"
+                                            Click="OnDiscard" AutomationProperties.AutomationId="ReloadProfile"/>
+                                    <Button HorizontalAlignment="Left" Margin="0,6,0,0" Content="撤销已应用权限"
+                                            Click="OnRevoke" AutomationProperties.AutomationId="RevokePolicy"/>
+                                    <Button HorizontalAlignment="Left" Margin="0,6,0,0" Content="创建隔离启动快捷方式…"
+                                            Click="OnShortcut" AutomationProperties.AutomationId="CreateShortcut"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+                    </TabControl>
+                </Border>
+                <Grid x:Name="NativePolicyActions" Grid.Row="3" Margin="0,13,0,1">
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                        <TextBlock x:Name="RuntimeState" FontWeight="SemiBold" TextWrapping="Wrap"
+                                   AutomationProperties.AutomationId="RuntimeState"/>
+                        <TextBlock x:Name="DirtyState" Style="{StaticResource Caption}" AutomationProperties.AutomationId="SavedState"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="SaveButton" Content="保存配置" Click="OnSave" AutomationProperties.AutomationId="SaveProfile"/>
+                        <Button x:Name="ApplyButton" Content="应用权限" Margin="7,0,0,0" Click="OnApply" AutomationProperties.AutomationId="ApplyPolicy"/>
+                        <Button x:Name="LaunchButton" Margin="7,0,0,0" Style="{StaticResource Primary}" Content="隔离启动"
+                                Click="OnLaunch" AutomationProperties.AutomationId="LaunchIsolated"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <StackPanel Grid.Row="1" Margin="1,7,1,0">
+                <ProgressBar x:Name="BusyIndicator" Visibility="Collapsed" IsIndeterminate="True" Height="3" Margin="0,0,0,3"
+                             Foreground="#5489AC" AutomationProperties.Name="正在处理"/>
+                <TextBlock x:Name="StatusMessage" Style="{StaticResource Caption}" MaxHeight="65"
+                           AutomationProperties.AutomationId="Feedback" AutomationProperties.LiveSetting="Polite"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

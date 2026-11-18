@@ -1,0 +1,46 @@
+# Private planning, machine-specific settings and run evidence
+*[Hh]andoff*.md
+.local/
+.ssh/
+.aws/
+.env
+.env.*
+!.env.example
+Certificate.dat
+Sandboxie.ini
+*.pfx
+*.p12
+*.pem
+*.key
+*.dmp
+*.log
+*.etl
+
+# Local desktop-client data
+tdata/
+xwechat_files/
+WeChat Files/
+
+# Build output and development tools
+/build/
+/out/
+/artifacts/
+bin/
+obj/
+*.exe
+*.dll
+*.obj
+*.pdb
+*.ilk
+*.sys
+*.cat
+*.exp
+*.lib
+.vs/
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+Thumbs.db
+Desktop.ini
+.DS_Store

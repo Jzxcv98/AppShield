@@ -1,0 +1,49 @@
+; SPDX-License-Identifier: GPL-3.0-only
+[Version]
+Signature="$WINDOWS NT$"
+Class=SecurityEnhancer
+ClassGuid={d02bc3da-0c8e-4945-9bd5-f1883c226c8c}
+Provider=%Provider%
+DriverVer=11/17/2026,0.1.0.0
+CatalogFile=AppShieldFilter.cat
+PnpLockdown=1
+
+[DestinationDirs]
+Filter.Files=13
+
+[SourceDisksNames]
+1=%Disk%,,,
+
+[SourceDisksFiles]
+AppShieldFilter.sys=1
+
+[DefaultInstall.NTamd64.10.0...26100]
+CopyFiles=Filter.Files
+
+[DefaultInstall.NTamd64.10.0...26100.Services]
+AddService=AppShieldFilter,0x00000002,Filter.Service
+
+[Filter.Service]
+DisplayName=%ServiceName%
+Description=%Description%
+ServiceBinary=%13%\AppShieldFilter.sys
+Dependencies=FltMgr
+ServiceType=2
+StartType=3
+ErrorControl=1
+LoadOrderGroup="FSFilter Security Enhancer"
+AddReg=Filter.Registry
+
+[Filter.Registry]
+HKR,"Parameters\Instances","DefaultInstance",0x00000000,"AppShield Instance"
+HKR,"Parameters\Instances\AppShield Instance","Altitude",0x00000000,"@APPSHIELD_ALTITUDE@"
+HKR,"Parameters\Instances\AppShield Instance","Flags",0x00010001,0
+
+[Filter.Files]
+AppShieldFilter.sys
+
+[Strings]
+Provider="AppShield"
+Disk="AppShield file filter"
+ServiceName="AppShield file filter"
+Description="Per-process file open controls for AppShield"

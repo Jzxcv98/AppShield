@@ -1,0 +1,46 @@
+name: Windows checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check public files
+        run: python tools/check_public_tree.py --staged
+      - name: Test privacy checks
+        run: python -m unittest discover -s tests/privacy -v
+      - name: Build and test the native desktop manager
+        shell: pwsh
+        run: ./tools/Build-AppShield.ps1 -Test
+      - name: Build the private clipboard test fixture
+        shell: pwsh
+        run: ./tools/restricted/Test-Clipboard.ps1 -BuildOnly
+      - name: Exercise Windows AppContainer file permissions
+        shell: pwsh
+        run: ./tools/native/Test-AppContainerFileAccess.ps1
+      - name: Compile the Telegram startup probe
+        shell: pwsh
+        run: ./tools/telegram/Test-TelegramStartup.ps1 -BuildOnly
+  driver:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Compile the minifilter and check its INF
+        shell: pwsh
+        run: ./tools/Build-AppShieldDriver.ps1
+      - name: Exercise shared path policy without loading the driver
+        run: ./build/driver/FilterLab.exe policy-test
